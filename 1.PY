@@ -1,18 +1,18 @@
-#The "Ghost" File Encryption
+import qrcode
 
-from cryptography.fernet import Fernet
-from PIL import Image
+data = input("Enter text or URL: ")
 
-# Generate a key and encrypt
-key = Fernet.generate_key()
-cipher = Fernet(key)
-message = b"Top Secret: The password is 'Phoenix'"
-encrypted_text = cipher.encrypt(message)
+qr = qrcode.QRCode(
+    version=1,
+    box_size=10,
+    border=5
+)
 
-# Create a tiny 10x10 image to 'hide' the data in its metadata
-img = Image.new('RGB', (10, 10), color = (73, 109, 137))
-img.info['secret'] = encrypted_text
+qr.add_data(data)
+qr.make(fit=True)
 
-print(f"Encryption Key: {key.decode()}")
-img.save('vault.png')
-print("Secret message hidden in vault.png metadata!")
+img = qr.make_image(fill_color="black", back_color="white")
+
+img.save("qrcode.png")
+
+print("QR Code generated and saved as qrcode.png")
